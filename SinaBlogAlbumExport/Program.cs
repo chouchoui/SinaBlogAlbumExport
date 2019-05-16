@@ -12,16 +12,22 @@ namespace SinaBlogAlbumExport
     {
         static void Main(string[] args)
         {
-
             var xmlPath = "blog.xml";
 
             var savePath = "Images";
 
-            if (Directory.Exists(savePath))
+            Console.Write("请输入开始导出的照片序号（默认为1）：");
+            if (!int.TryParse(Console.ReadLine(), out int index))
             {
-                DeleteDirectory(savePath);
+                index = 1;
             }
-            Directory.CreateDirectory(savePath);
+
+
+            if (!Directory.Exists(savePath))
+            {
+                Directory.CreateDirectory(savePath);
+            }
+
 
             XDocument myXDoc = XDocument.Load(xmlPath);
             var RootElemnt = myXDoc.Element("PhotoList");
@@ -29,15 +35,21 @@ namespace SinaBlogAlbumExport
 
             Console.WriteLine($"共{photos.Count()}张照片");
 
-            var index = 1;
-            photos.ToList().ForEach(b =>
+            photos.Skip(index - 1).ToList().ForEach(b =>
             {
+                var imagePath = Path.Combine(savePath, $"image_{index}.jpg");
+
+                if (File.Exists(imagePath))
+                {
+                    File.Delete(imagePath);
+                }
+
                 Console.WriteLine($"正在导出第{index}张");
-                SaveImage(b, Path.Combine(savePath, $"image_${index}.jpg"), ImageFormat.Jpeg);
+                SaveImage(b, imagePath, ImageFormat.Jpeg);
                 index++;
             });
-
-            Console.WriteLine("finished");
+            Console.WriteLine("************************************************************");
+            Console.WriteLine("导出完成");
         }
 
 

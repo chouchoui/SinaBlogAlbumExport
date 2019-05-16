@@ -3,8 +3,8 @@ using System.Linq;
 using System.Net;
 using System.Xml.Linq;
 using System.IO;
-using System.DrawingCore.Imaging;
-using System.DrawingCore;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace SinaBlogAlbumExport
 {
@@ -49,7 +49,8 @@ namespace SinaBlogAlbumExport
                 index++;
             });
             Console.WriteLine("************************************************************");
-            Console.WriteLine("导出完成");
+            Console.WriteLine("导出完成，按任意键关闭");
+            Console.ReadKey();
         }
 
 
@@ -58,7 +59,7 @@ namespace SinaBlogAlbumExport
 
             WebClient client = new WebClient();
             Stream stream = client.OpenRead(imageUrl);
-            Bitmap bitmap; bitmap = new Bitmap(stream);
+            Bitmap bitmap = new Bitmap(stream);
 
             if (bitmap != null)
                 bitmap.Save(filename, format);
